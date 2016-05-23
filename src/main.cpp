@@ -5,6 +5,8 @@
 #include <sstream>
 #include <list>
 #include "Color.cpp"
+//#include <chrono>
+//#include "chrono_io"
 
 using namespace std;
 using namespace cv;
@@ -38,12 +40,33 @@ bool colorDistance(Vec3b a, Vec3b b, int threshold)
 /*
 	Function to modify pixel values at a point as per seed pixel
 */
-void modifyPixel(Mat input, Vec3b seed, int x, int y)
+void modifyPixel(Mat input, Vec3b seed, int x, int y, int colorflag)
 {
 	Vec3b &colorC = input.at<Vec3b>(x, y);
-	colorC[0] = 0;
-	colorC[1] = 255;
-	colorC[2] = 255;
+
+	//Yellow Pixel
+	if(colorflag == 1)
+	{
+		colorC[0] = 0;
+		colorC[1] = 255;
+		colorC[2] = 255;
+	}
+
+	//Green Pixel
+	if(colorflag == 2)
+	{
+		colorC[0] = 0;
+		colorC[1] = 255;
+		colorC[2] = 0;
+	}
+
+	//Red Pixel
+	if(colorflag == 3)
+	{
+		colorC[0] = 0;
+		colorC[1] = 0;
+		colorC[2] = 255;
+	}
 }
 
 /*
@@ -83,8 +106,9 @@ void updateMean(Vec3b &seed, Vec3b b, long int count)
 	sX --> Seed Pixel x value
 	sY --> Seed Pixel y value
 	threshold --> if distance is less than threshold then recursion proceeds, else stops.
+	colorflag --> to determine the color to be filled with
 */
-void grow(Mat input, int sX, int sY, int threshold)
+void grow(Mat input, int sX, int sY, int threshold, int colorflag)
 {
 	int x, y;
 	long int count = 1;
@@ -104,7 +128,7 @@ void grow(Mat input, int sX, int sY, int threshold)
 
 	reach[sX][sY] = true;
 
-	modifyPixel(input, seed, sX, sY);
+	modifyPixel(input, seed, sX, sY, colorflag);
 
 	s = intToString(sX, sY);
 	queue.push_back(s);
@@ -123,12 +147,12 @@ void grow(Mat input, int sX, int sY, int threshold)
 		//Right Pixel
 		if(x + 1 < input.rows && (!reach[x + 1][y]) && colorDistance(seed, input.at<Vec3b>(x + 1, y), threshold))
 		{
-			cout << "reached right pixel" << endl;
+			//cout << "reached right pixel" << endl;
 			reach[x + 1][y] = true;
 			s = intToString(x + 1, y);
 			queue.push_back(s);
 			//updateMean(seed, input.at<Vec3b>(x + 1, y), count);
-			modifyPixel(input, seed, x + 1, y);
+			modifyPixel(input, seed, x + 1, y, colorflag);
 			++count;
 
 		}
@@ -136,87 +160,87 @@ void grow(Mat input, int sX, int sY, int threshold)
 		//Below Pixel
 		if(y + 1 < input.cols && (!reach[x][y + 1]) && colorDistance(seed, input.at<Vec3b>(x, y + 1), threshold))
 		{
-			cout << "reached Below pixel" << endl;
+			//cout << "reached Below pixel" << endl;
 			reach[x][y + 1] = true;
 			s = intToString(x, y + 1);
 			queue.push_back(s);
 			//updateMean(seed, input.at<Vec3b>(x, y + 1), count);
-			modifyPixel(input, seed, x, y + 1);
+			modifyPixel(input, seed, x, y + 1, colorflag);
 			++count;
 		}
 
-		cout << "+++seed Pixel" << endl;
-		cout << "seed[0] : " << (int)seed[0] << ", seed[1] : " << (int)seed[1] << ", seed[2] = " << (int)seed[2] << endl;
+		//cout << "+++seed Pixel" << endl;
+		//cout << "seed[0] : " << (int)seed[0] << ", seed[1] : " << (int)seed[1] << ", seed[2] = " << (int)seed[2] << endl;
 
 		//Left Pixel
 		if(x - 1 >= 0 && (!reach[x - 1][y]) && colorDistance(seed, input.at<Vec3b>(x - 1, y), threshold))
 		{
-			cout << "reached left pixel" << endl;
+			//cout << "reached left pixel" << endl;
 			reach[x - 1][y] = true;
 			s = intToString(x - 1, y);
 			queue.push_back(s);
 			//updateMean(seed, input.at<Vec3b>(x - 1, y), count);
-			modifyPixel(input, seed, x - 1, y);
+			modifyPixel(input, seed, x - 1, y, colorflag);
 			++count;
 		}
 
 		//Above Pixel
 		if(y - 1 >= 0 && (!reach[x][y - 1]) && colorDistance(seed, input.at<Vec3b>(x, y - 1), threshold))
 		{
-			cout << "reached Above pixel" << endl;
+			//cout << "reached Above pixel" << endl;
 			reach[x][y - 1] = true;
 			s = intToString(x, y - 1);
 			queue.push_back(s);
 			//updateMean(seed, input.at<Vec3b>(x, y - 1), count);
-			modifyPixel(input, seed, x, y - 1);
+			modifyPixel(input, seed, x, y - 1, colorflag);
 			++count;
 		}
 
 		//Bottom Right Pixel
 		if(x + 1 < input.rows && y + 1 < input.cols && (!reach[x + 1][y + 1]) && colorDistance(seed, input.at<Vec3b>(x + 1, y + 1), threshold))
 		{
-			cout << "reached Bottom Right pixel" << endl;
+			//cout << "reached Bottom Right pixel" << endl;
 			reach[x + 1][y + 1] = true;
 			s = intToString(x + 1, y + 1);
 			queue.push_back(s);
 			//updateMean(seed, input.at<Vec3b>(x + 1, y + 1), count);
-			modifyPixel(input, seed, x + 1, y + 1);
+			modifyPixel(input, seed, x + 1, y + 1, colorflag);
 			++count;
 		}
 
 		//Upper Right Pixel
 		if(x + 1 < input.rows && y - 1 >= 0 && (!reach[x + 1][y - 1]) && colorDistance(seed, input.at<Vec3b>(x + 1, y - 1), threshold))
 		{
-			cout << "reached Upper right pixel" << endl;
+			//cout << "reached Upper right pixel" << endl;
 			reach[x + 1][y - 1] = true;
 			s = intToString(x + 1, y - 1);
 			queue.push_back(s);
 			//updateMean(seed, input.at<Vec3b>(x + 1, y - 1), count);
-			modifyPixel(input, seed, x + 1, y - 1);
+			modifyPixel(input, seed, x + 1, y - 1, colorflag);
 			++count;
 		}
 
 		//Bottom Left Pixel
 		if(x - 1 >= 0 && y + 1 < input.cols && (!reach[x - 1][y + 1]) && colorDistance(seed, input.at<Vec3b>(x - 1, y + 1), threshold))
 		{
-			cout << "reached Bottom left pixel" << endl;
+			//cout << "reached Bottom left pixel" << endl;
 			reach[x - 1][y + 1] = true;
 			s = intToString(x - 1, y + 1);
 			queue.push_back(s);
 			//updateMean(seed, input.at<Vec3b>(x - 1, y + 1), count);
-			modifyPixel(input, seed, x - 1, y + 1);
+			modifyPixel(input, seed, x - 1, y + 1, colorflag);
 			++count;
 		}
 
 		//Upper left Pixel
 		if(x - 1 >= 0 && y - 1 >= 0 && (!reach[x - 1][y - 1]) && colorDistance(seed, input.at<Vec3b>(x - 1, y - 1), threshold))
 		{
-			cout << "reached Upper left pixel" << endl;
+			//cout << "reached Upper left pixel" << endl;
 			reach[x - 1][y - 1] = true;
 			s = intToString(x - 1, y - 1);
 			queue.push_back(s);
 			//updateMean(seed, input.at<Vec3b>(x - 1, y - 1), count);
-			modifyPixel(input, seed, x - 1, y - 1);
+			modifyPixel(input, seed, x - 1, y - 1, colorflag);
 			++count;
 		}
 	}	
@@ -235,11 +259,26 @@ int main(int argc, char const **argv)
 
 	deniose.copyTo(org);
 
-	seed = deniose.at<Vec3b>(290, 290);
-	grow(deniose, 290, 290, 20);
+	//typedef std::chrono::high_resolution_clock clk;
 
-	seed = denoise.at<Vec3b>(156, 292);
-	grow(deniose, 256, 290, 10);
+	//auto t1 = clk::now();
+
+	seed = deniose.at<Vec3b>(290, 290);
+	grow(deniose, 290, 290, 20, 1);
+
+	//auto t2 = clk::now();
+
+	seed = deniose.at<Vec3b>(256, 294);
+	grow(deniose, 256, 294, 20, 1);
+
+	//auto t3 = clk::now();
+
+	seed = deniose.at<Vec3b>(303, 515);
+	grow(deniose, 303, 515, 20, 3);
+
+	//auto t4 = clk::now();
+
+	//cout << "First seed : " << t2 - t1 << ", Second seed : " << t3 - t2 << ", Third seed : " << t4 - t3 << endl;
 
 	imshow("Original Image", org);
 	imshow("Modified Image", deniose);
