@@ -27,7 +27,7 @@ bool colorDistance(Vec3b a, Vec3b b, int threshold)
 	cb.push_back(b[1]);
 	cb.push_back(b[0]);
 
-	float dist = ciede2000_distance(ca, cb);
+	float dist = kallaballa::ciede2000_distance(ca, cb);
 
 	if((int)dist <= threshold)
 		return true;
