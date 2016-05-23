@@ -59,7 +59,7 @@ CMAKE_BINARY_DIR = /home/lonewolf/Desktop/RegionGrowing
 CMakeFiles/main.dir/all:
 	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/depend
 	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/build
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/lonewolf/Desktop/RegionGrowing/CMakeFiles  1
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/lonewolf/Desktop/RegionGrowing/CMakeFiles  1 2
 	@echo "Built target main"
 .PHONY : CMakeFiles/main.dir/all
 
@@ -69,7 +69,7 @@ all: CMakeFiles/main.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/main.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/lonewolf/Desktop/RegionGrowing/CMakeFiles 1
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/lonewolf/Desktop/RegionGrowing/CMakeFiles 2
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/main.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/lonewolf/Desktop/RegionGrowing/CMakeFiles 0
 .PHONY : CMakeFiles/main.dir/rule

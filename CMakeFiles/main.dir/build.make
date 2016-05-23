@@ -72,14 +72,39 @@ CMakeFiles/main.dir/src/main.cpp.o.provides: CMakeFiles/main.dir/src/main.cpp.o.
 
 CMakeFiles/main.dir/src/main.cpp.o.provides.build: CMakeFiles/main.dir/src/main.cpp.o
 
+CMakeFiles/main.dir/src/CIEDE2000.cpp.o: CMakeFiles/main.dir/flags.make
+CMakeFiles/main.dir/src/CIEDE2000.cpp.o: src/CIEDE2000.cpp
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/lonewolf/Desktop/RegionGrowing/CMakeFiles $(CMAKE_PROGRESS_2)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/main.dir/src/CIEDE2000.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/main.dir/src/CIEDE2000.cpp.o -c /home/lonewolf/Desktop/RegionGrowing/src/CIEDE2000.cpp
+
+CMakeFiles/main.dir/src/CIEDE2000.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/main.dir/src/CIEDE2000.cpp.i"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/lonewolf/Desktop/RegionGrowing/src/CIEDE2000.cpp > CMakeFiles/main.dir/src/CIEDE2000.cpp.i
+
+CMakeFiles/main.dir/src/CIEDE2000.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/main.dir/src/CIEDE2000.cpp.s"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/lonewolf/Desktop/RegionGrowing/src/CIEDE2000.cpp -o CMakeFiles/main.dir/src/CIEDE2000.cpp.s
+
+CMakeFiles/main.dir/src/CIEDE2000.cpp.o.requires:
+.PHONY : CMakeFiles/main.dir/src/CIEDE2000.cpp.o.requires
+
+CMakeFiles/main.dir/src/CIEDE2000.cpp.o.provides: CMakeFiles/main.dir/src/CIEDE2000.cpp.o.requires
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/CIEDE2000.cpp.o.provides.build
+.PHONY : CMakeFiles/main.dir/src/CIEDE2000.cpp.o.provides
+
+CMakeFiles/main.dir/src/CIEDE2000.cpp.o.provides.build: CMakeFiles/main.dir/src/CIEDE2000.cpp.o
+
 # Object files for target main
 main_OBJECTS = \
-"CMakeFiles/main.dir/src/main.cpp.o"
+"CMakeFiles/main.dir/src/main.cpp.o" \
+"CMakeFiles/main.dir/src/CIEDE2000.cpp.o"
 
 # External object files for target main
 main_EXTERNAL_OBJECTS =
 
 main: CMakeFiles/main.dir/src/main.cpp.o
+main: CMakeFiles/main.dir/src/CIEDE2000.cpp.o
 main: CMakeFiles/main.dir/build.make
 main: /usr/local/lib/libopencv_viz.so.3.1.0
 main: /usr/local/lib/libopencv_videostab.so.3.1.0
@@ -116,6 +141,7 @@ CMakeFiles/main.dir/build: main
 .PHONY : CMakeFiles/main.dir/build
 
 CMakeFiles/main.dir/requires: CMakeFiles/main.dir/src/main.cpp.o.requires
+CMakeFiles/main.dir/requires: CMakeFiles/main.dir/src/CIEDE2000.cpp.o.requires
 .PHONY : CMakeFiles/main.dir/requires
 
 CMakeFiles/main.dir/clean:

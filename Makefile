@@ -115,6 +115,30 @@ main/fast:
 	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/build
 .PHONY : main/fast
 
+src/CIEDE2000.o: src/CIEDE2000.cpp.o
+.PHONY : src/CIEDE2000.o
+
+# target to build an object file
+src/CIEDE2000.cpp.o:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/CIEDE2000.cpp.o
+.PHONY : src/CIEDE2000.cpp.o
+
+src/CIEDE2000.i: src/CIEDE2000.cpp.i
+.PHONY : src/CIEDE2000.i
+
+# target to preprocess a source file
+src/CIEDE2000.cpp.i:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/CIEDE2000.cpp.i
+.PHONY : src/CIEDE2000.cpp.i
+
+src/CIEDE2000.s: src/CIEDE2000.cpp.s
+.PHONY : src/CIEDE2000.s
+
+# target to generate assembly for a file
+src/CIEDE2000.cpp.s:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/CIEDE2000.cpp.s
+.PHONY : src/CIEDE2000.cpp.s
+
 src/main.o: src/main.cpp.o
 .PHONY : src/main.o
 
@@ -148,6 +172,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... main"
 	@echo "... rebuild_cache"
+	@echo "... src/CIEDE2000.o"
+	@echo "... src/CIEDE2000.i"
+	@echo "... src/CIEDE2000.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"

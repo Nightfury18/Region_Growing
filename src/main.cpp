@@ -19,20 +19,20 @@ bool colorDistance(Vec3b a, Vec3b b, int threshold)
 {
 	std::vector<double> ca, cb;
 
-	ca.push_back(a[2]);
-	ca.push_back(a[1]);
-	ca.push_back(a[0]);
+	ca.push_back((double)a[2]);
+	ca.push_back((double)a[1]);
+	ca.push_back((double)a[0]);
 
-	cb.push_back(b[2]);
-	cb.push_back(b[1]);
-	cb.push_back(b[0]);
+	cb.push_back((double)b[2]);
+	cb.push_back((double)b[1]);
+	cb.push_back((double)b[0]);
 
 	float dist = kallaballa::ciede2000_distance(ca, cb);
 
 	if((int)dist <= threshold)
 		return true;
 	else
-		false;
+		return false;
 }
 
 /*
@@ -127,7 +127,7 @@ void grow(Mat input, int sX, int sY, int threshold)
 			reach[x + 1][y] = true;
 			s = intToString(x + 1, y);
 			queue.push_back(s);
-			updateMean(seed, input.at<Vec3b>(x + 1, y), count);
+			//updateMean(seed, input.at<Vec3b>(x + 1, y), count);
 			modifyPixel(input, seed, x + 1, y);
 			++count;
 
@@ -140,7 +140,7 @@ void grow(Mat input, int sX, int sY, int threshold)
 			reach[x][y + 1] = true;
 			s = intToString(x, y + 1);
 			queue.push_back(s);
-			updateMean(seed, input.at<Vec3b>(x, y + 1), count);
+			//updateMean(seed, input.at<Vec3b>(x, y + 1), count);
 			modifyPixel(input, seed, x, y + 1);
 			++count;
 		}
@@ -155,7 +155,7 @@ void grow(Mat input, int sX, int sY, int threshold)
 			reach[x - 1][y] = true;
 			s = intToString(x - 1, y);
 			queue.push_back(s);
-			updateMean(seed, input.at<Vec3b>(x - 1, y), count);
+			//updateMean(seed, input.at<Vec3b>(x - 1, y), count);
 			modifyPixel(input, seed, x - 1, y);
 			++count;
 		}
@@ -167,7 +167,7 @@ void grow(Mat input, int sX, int sY, int threshold)
 			reach[x][y - 1] = true;
 			s = intToString(x, y - 1);
 			queue.push_back(s);
-			updateMean(seed, input.at<Vec3b>(x, y - 1), count);
+			//updateMean(seed, input.at<Vec3b>(x, y - 1), count);
 			modifyPixel(input, seed, x, y - 1);
 			++count;
 		}
@@ -179,7 +179,7 @@ void grow(Mat input, int sX, int sY, int threshold)
 			reach[x + 1][y + 1] = true;
 			s = intToString(x + 1, y + 1);
 			queue.push_back(s);
-			updateMean(seed, input.at<Vec3b>(x + 1, y + 1), count);
+			//updateMean(seed, input.at<Vec3b>(x + 1, y + 1), count);
 			modifyPixel(input, seed, x + 1, y + 1);
 			++count;
 		}
@@ -191,7 +191,7 @@ void grow(Mat input, int sX, int sY, int threshold)
 			reach[x + 1][y - 1] = true;
 			s = intToString(x + 1, y - 1);
 			queue.push_back(s);
-			updateMean(seed, input.at<Vec3b>(x + 1, y - 1), count);
+			//updateMean(seed, input.at<Vec3b>(x + 1, y - 1), count);
 			modifyPixel(input, seed, x + 1, y - 1);
 			++count;
 		}
@@ -203,7 +203,7 @@ void grow(Mat input, int sX, int sY, int threshold)
 			reach[x - 1][y + 1] = true;
 			s = intToString(x - 1, y + 1);
 			queue.push_back(s);
-			updateMean(seed, input.at<Vec3b>(x - 1, y + 1), count);
+			//updateMean(seed, input.at<Vec3b>(x - 1, y + 1), count);
 			modifyPixel(input, seed, x - 1, y + 1);
 			++count;
 		}
@@ -215,7 +215,7 @@ void grow(Mat input, int sX, int sY, int threshold)
 			reach[x - 1][y - 1] = true;
 			s = intToString(x - 1, y - 1);
 			queue.push_back(s);
-			updateMean(seed, input.at<Vec3b>(x - 1, y - 1), count);
+			//updateMean(seed, input.at<Vec3b>(x - 1, y - 1), count);
 			modifyPixel(input, seed, x - 1, y - 1);
 			++count;
 		}
@@ -235,9 +235,12 @@ int main(int argc, char const **argv)
 
 	deniose.copyTo(org);
 
-	seed = deniose.at<Vec3b>(280, 290);
-	grow(deniose, 280, 290, 30);
-	
+	seed = deniose.at<Vec3b>(290, 290);
+	grow(deniose, 290, 290, 20);
+
+	seed = denoise.at<Vec3b>(156, 292);
+	grow(deniose, 256, 290, 10);
+
 	imshow("Original Image", org);
 	imshow("Modified Image", deniose);
 	waitKey(0);
