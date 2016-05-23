@@ -4,6 +4,7 @@
 #include <string>
 #include <sstream>
 #include <list>
+#include "Color.cpp"
 
 using namespace std;
 using namespace cv;
@@ -11,30 +12,27 @@ using namespace cv;
 Vec3b seed;
 
 /*
-	Function to determine the color distance between two pixel points
-	thOrdinary --> threshold for Normal Pixels
-	thwhite    --> threshold for Overexposed Pixels	
+	Function to determine the color difference between two pixel points 
+	This implements CIEDE2000 algorithm to find the difference in color
 */
-bool colorDistance(Vec3b a,Vec3b b, int thOrdinary, int thWhite)
+bool colorDistance(Vec3b a, Vec3b b, int threshold)
 {
-    float a1 = a[2];
-    float a2 = a[1];
-    float a3 = a[0];
+	std::vector<double> ca, cb;
 
-    float b1 = b[2];
-    float b2 = b[1];
-    float b3 = b[0];
+	ca.push_back(a[2]);
+	ca.push_back(a[1]);
+	ca.push_back(a[0]);
 
-    float dist1 = (((a1 - b1) * (a1 - b1) + (a2 - b2) * (a2 - b2) + (a3 - b3) * (a3 - b3)));
-    dist1 = sqrt(dist1 / 3);
+	cb.push_back(b[2]);
+	cb.push_back(b[1]);
+	cb.push_back(b[0]);
 
-    float dist2 = (((255 - b1) * (255 - b1) + (255 - b2) * (255 - b2) + (255 - b3) * (255 - b3)));
-    dist2 = sqrt(dist2 / 3);
-    
-    if(dist1 <= thOrdinary || dist2 <= thWhite)
-    	return true;
-    else
-    	return false;
+	float dist = ciede2000_distance(ca, cb);
+
+	if((int)dist <= threshold)
+		return true;
+	else
+		false;
 }
 
 /*
@@ -84,10 +82,9 @@ void updateMean(Vec3b &seed, Vec3b b, long int count)
 	Region Growing algorithm, which is BFS type algorithm
 	sX --> Seed Pixel x value
 	sY --> Seed Pixel y value
-	thOrdinary --> threshold for normal Pixels
-	thWhite    --> threshold for Overexposed Pixels
+	threshold --> if distance is less than threshold then recursion proceeds, else stops.
 */
-void grow(Mat input, int sX, int sY, int thOrdinary, int thWhite)
+void grow(Mat input, int sX, int sY, int threshold)
 {
 	int x, y;
 	long int count = 1;
@@ -124,7 +121,7 @@ void grow(Mat input, int sX, int sY, int thOrdinary, int thWhite)
 		ssy >> y;
 
 		//Right Pixel
-		if(x + 1 < input.rows && (!reach[x + 1][y]) && colorDistance(seed, input.at<Vec3b>(x + 1, y), thOrdinary, thWhite))
+		if(x + 1 < input.rows && (!reach[x + 1][y]) && colorDistance(seed, input.at<Vec3b>(x + 1, y), threshold))
 		{
 			cout << "reached right pixel" << endl;
 			reach[x + 1][y] = true;
@@ -137,7 +134,7 @@ void grow(Mat input, int sX, int sY, int thOrdinary, int thWhite)
 		}
 
 		//Below Pixel
-		if(y + 1 < input.cols && (!reach[x][y + 1]) && colorDistance(seed, input.at<Vec3b>(x, y + 1), thOrdinary, thWhite))
+		if(y + 1 < input.cols && (!reach[x][y + 1]) && colorDistance(seed, input.at<Vec3b>(x, y + 1), threshold))
 		{
 			cout << "reached Below pixel" << endl;
 			reach[x][y + 1] = true;
@@ -152,7 +149,7 @@ void grow(Mat input, int sX, int sY, int thOrdinary, int thWhite)
 		cout << "seed[0] : " << (int)seed[0] << ", seed[1] : " << (int)seed[1] << ", seed[2] = " << (int)seed[2] << endl;
 
 		//Left Pixel
-		if(x - 1 >= 0 && (!reach[x - 1][y]) && colorDistance(seed, input.at<Vec3b>(x - 1, y), thOrdinary, thWhite))
+		if(x - 1 >= 0 && (!reach[x - 1][y]) && colorDistance(seed, input.at<Vec3b>(x - 1, y), threshold))
 		{
 			cout << "reached left pixel" << endl;
 			reach[x - 1][y] = true;
@@ -164,7 +161,7 @@ void grow(Mat input, int sX, int sY, int thOrdinary, int thWhite)
 		}
 
 		//Above Pixel
-		if(y - 1 >= 0 && (!reach[x][y - 1]) && colorDistance(seed, input.at<Vec3b>(x, y - 1), thOrdinary, thWhite))
+		if(y - 1 >= 0 && (!reach[x][y - 1]) && colorDistance(seed, input.at<Vec3b>(x, y - 1), threshold))
 		{
 			cout << "reached Above pixel" << endl;
 			reach[x][y - 1] = true;
@@ -176,7 +173,7 @@ void grow(Mat input, int sX, int sY, int thOrdinary, int thWhite)
 		}
 
 		//Bottom Right Pixel
-		if(x + 1 < input.rows && y + 1 < input.cols && (!reach[x + 1][y + 1]) && colorDistance(seed, input.at<Vec3b>(x + 1, y + 1), thOrdinary, thWhite))
+		if(x + 1 < input.rows && y + 1 < input.cols && (!reach[x + 1][y + 1]) && colorDistance(seed, input.at<Vec3b>(x + 1, y + 1), threshold))
 		{
 			cout << "reached Bottom Right pixel" << endl;
 			reach[x + 1][y + 1] = true;
@@ -188,7 +185,7 @@ void grow(Mat input, int sX, int sY, int thOrdinary, int thWhite)
 		}
 
 		//Upper Right Pixel
-		if(x + 1 < input.rows && y - 1 >= 0 && (!reach[x + 1][y - 1]) && colorDistance(seed, input.at<Vec3b>(x + 1, y - 1), thOrdinary, thWhite))
+		if(x + 1 < input.rows && y - 1 >= 0 && (!reach[x + 1][y - 1]) && colorDistance(seed, input.at<Vec3b>(x + 1, y - 1), threshold))
 		{
 			cout << "reached Upper right pixel" << endl;
 			reach[x + 1][y - 1] = true;
@@ -200,7 +197,7 @@ void grow(Mat input, int sX, int sY, int thOrdinary, int thWhite)
 		}
 
 		//Bottom Left Pixel
-		if(x - 1 >= 0 && y + 1 < input.cols && (!reach[x - 1][y + 1]) && colorDistance(seed, input.at<Vec3b>(x - 1, y + 1), thOrdinary, thWhite))
+		if(x - 1 >= 0 && y + 1 < input.cols && (!reach[x - 1][y + 1]) && colorDistance(seed, input.at<Vec3b>(x - 1, y + 1), threshold))
 		{
 			cout << "reached Bottom left pixel" << endl;
 			reach[x - 1][y + 1] = true;
@@ -212,7 +209,7 @@ void grow(Mat input, int sX, int sY, int thOrdinary, int thWhite)
 		}
 
 		//Upper left Pixel
-		if(x - 1 >= 0 && y - 1 >= 0 && (!reach[x - 1][y - 1]) && colorDistance(seed, input.at<Vec3b>(x - 1, y - 1), thOrdinary, thWhite))
+		if(x - 1 >= 0 && y - 1 >= 0 && (!reach[x - 1][y - 1]) && colorDistance(seed, input.at<Vec3b>(x - 1, y - 1), threshold))
 		{
 			cout << "reached Upper left pixel" << endl;
 			reach[x - 1][y - 1] = true;
@@ -239,8 +236,7 @@ int main(int argc, char const **argv)
 	deniose.copyTo(org);
 
 	seed = deniose.at<Vec3b>(280, 290);
-
-	grow(deniose, 280, 290, 50, 200);
+	grow(deniose, 280, 290, 30);
 	
 	imshow("Original Image", org);
 	imshow("Modified Image", deniose);
