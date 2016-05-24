@@ -41,6 +41,8 @@ list
 -
 Color.cpp
 /home/lonewolf/Desktop/RegionGrowing/src/Color.cpp
+chrono
+-
 
 /usr/local/include/opencv/cxcore.h
 opencv2/core/core_c.h

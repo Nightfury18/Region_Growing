@@ -5,11 +5,12 @@
 #include <sstream>
 #include <list>
 #include "Color.cpp"
-//#include <chrono>
+#include <chrono>
 //#include "chrono_io"
 
 using namespace std;
 using namespace cv;
+using namespace std::chrono;
 
 Vec3b seed;
 
@@ -259,26 +260,26 @@ int main(int argc, char const **argv)
 
 	deniose.copyTo(org);
 
-	//typedef std::chrono::high_resolution_clock clk;
+	typedef std::chrono::high_resolution_clock clk;
 
-	//auto t1 = clk::now();
+	auto t1 = clk::now();
 
 	seed = deniose.at<Vec3b>(290, 290);
 	grow(deniose, 290, 290, 20, 1);
 
-	//auto t2 = clk::now();
+	auto t2 = clk::now();
 
 	seed = deniose.at<Vec3b>(256, 294);
 	grow(deniose, 256, 294, 20, 1);
 
-	//auto t3 = clk::now();
+	auto t3 = clk::now();
 
 	seed = deniose.at<Vec3b>(303, 515);
 	grow(deniose, 303, 515, 20, 3);
 
-	//auto t4 = clk::now();
+	auto t4 = clk::now();
 
-	//cout << "First seed : " << t2 - t1 << ", Second seed : " << t3 - t2 << ", Third seed : " << t4 - t3 << endl;
+	cout << "First seed : " << duration_cast<microseconds>(t2 - t1).count() << ", Second seed : " << duration_cast<microseconds>(t3 - t2).count() << ", Third seed : " << duration_cast<microseconds>(t4 - t3).count() << endl;
 
 	imshow("Original Image", org);
 	imshow("Modified Image", deniose);
