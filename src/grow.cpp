@@ -5,14 +5,9 @@
 #include <sstream>
 #include <list>
 #include "Color.cpp"
-#include <chrono>
-//#include "chrono_io"
 
 using namespace std;
 using namespace cv;
-using namespace std::chrono;
-
-Vec3b seed;
 
 /*
 	Function to determine the color difference between two pixel points 
@@ -87,19 +82,9 @@ string intToString(int x, int y)
 	return s;
 }
 
-/*
-	Function to update the mean value of region to seed pixel
-*/
-void updateMean(Vec3b &seed, Vec3b b, long int count)
+grow::grow(int threshold)
 {
-	int s0, s1, s2;
-	s0 = (int)((count * seed[0] + b[0]) / (count + 1));
-	s1 = (int)((count * seed[1] + b[1]) / (count + 1));
-	s2 = (int)((count * seed[2] + b[2]) / (count + 1));
-
-	seed[0] = s0;
-	seed[1] = s1;
-	seed[2] = s2;
+	this->threshold = threshold;
 }
 
 /*
@@ -110,7 +95,7 @@ void updateMean(Vec3b &seed, Vec3b b, long int count)
 	threshold --> if distance is less than threshold then recursion proceeds, else stops.
 	colorflag --> to determine the color to be filled with
 */
-void grow(Mat input, Mat edgeMap, int sX, int sY, int threshold, int colorflag)
+grow::start_grow(Mat input, Mat edgeMap, int sX, int sY, int colorflag)
 {
 	int x, y;
 	long int count = 1;
@@ -285,50 +270,15 @@ void grow(Mat input, Mat edgeMap, int sX, int sY, int threshold, int colorflag)
 			else
 				modifyPixel(edgeMap, seed, x - 1, y - 1, colorflag);
 		}
-	}	
-
+	}
 }
 
-
-
-int main(int argc, char const **argv)
+grow::setThreshold(int threshold)
 {
-	Mat src, org, denoise;
+	this->threshold = threshold;
+}
 
-	src = imread(argv[1], CV_LOAD_IMAGE_COLOR);
-	fastNlMeansDenoisingColored(src, denoise, 2);
-	medianBlur(denoise, denoise, 3);
-
-	denoise.copyTo(org);
-	Mat edgeMap(denoise.rows, denoise.cols, CV_8UC3, Scalar(0, 0, 0));
-
-	typedef std::chrono::high_resolution_clock clk;
-
-	auto t1 = clk::now();
-
-	seed = denoise.at<Vec3b>(290, 290);
-	grow(denoise, edgeMap, 290, 290, 20, 1);
-
-	auto t2 = clk::now();
-
-	seed = denoise.at<Vec3b>(256, 294);
-	grow(denoise, edgeMap,256, 294, 20, 1);
-
-	auto t3 = clk::now();
-
-	seed = denoise.at<Vec3b>(303, 515);
-
-	grow(denoise, edgeMap, 303, 515, 20, 3);
-
-	auto t4 = clk::now();
-
-	cout << "First seed : " << duration_cast<microseconds>(t2 - t1).count() << ", Second seed : " << duration_cast<microseconds>(t3 - t2).count() << ", Third seed : " << duration_cast<microseconds>(t4 - t3).count() << endl;
-
-	imshow("Original Image", org);
-	imshow("Modified Image", denoise);
-	imshow("EdgeMap Image", edgeMap);
-	waitKey(0);
-	destroyAllWindows();
-
-	return 0;
+grow::setSeed(Vec3b seed)
+{
+	this->seed = seed;
 }
