@@ -36,7 +36,7 @@ bool colorDistance(Vec3b a, Vec3b b, int threshold)
 /*
 	Function to modify pixel values at a point as per seed pixel
 */
-void modifyPixel(Mat input, Vec3b seed, int x, int y, int colorflag)
+void modifyPixel(Mat input, int x, int y, int colorflag)
 {
 	Vec3b &colorC = input.at<Vec3b>(x, y);
 
@@ -100,22 +100,14 @@ grow::start_grow(Mat input, Mat edgeMap, int sX, int sY, int colorflag)
 	int x, y;
 	long int count = 1;
 	String s = "";
-	vector< vector<bool> > reach;
-
-	for (int i = 0; i < input.rows; ++i)
-	{
-		reach.push_back(vector<bool>());
-		for (int j = 0; j < input.cols; ++j)
-		{
-			reach[i].push_back(false);
-		}
-	}
+	Vec3b seed = input.at<Vec3b>(sX, sY);
+	vector< vector<bool> > reach(input.rows, vector<bool>(input.cols, false));
 
 	list <string> queue;
 
 	reach[sX][sY] = true;
 
-	modifyPixel(input, seed, sX, sY, colorflag);
+	modifyPixel(input, sX, sY, colorflag);
 
 	s = intToString(sX, sY);
 	queue.push_back(s);
@@ -141,11 +133,11 @@ grow::start_grow(Mat input, Mat edgeMap, int sX, int sY, int colorflag)
 				s = intToString(x + 1, y);
 				queue.push_back(s);
 				//updateMean(seed, input.at<Vec3b>(x + 1, y), count);
-				modifyPixel(input, seed, x + 1, y, colorflag);
+				modifyPixel(input, x + 1, y, colorflag);
 				++count;
 			}
 			else
-				modifyPixel(edgeMap, seed, x + 1, y, colorflag);
+				modifyPixel(edgeMap, x + 1, y, colorflag);
 
 		}
 
@@ -159,11 +151,11 @@ grow::start_grow(Mat input, Mat edgeMap, int sX, int sY, int colorflag)
 				s = intToString(x, y + 1);
 				queue.push_back(s);
 				//updateMean(seed, input.at<Vec3b>(x, y + 1), count);
-				modifyPixel(input, seed, x, y + 1, colorflag);
+				modifyPixel(input, x, y + 1, colorflag);
 				++count;
 			}
 			else
-				modifyPixel(edgeMap, seed, x, y + 1, colorflag);
+				modifyPixel(edgeMap, x, y + 1, colorflag);
 		}
 
 		//cout << "+++seed Pixel" << endl;
@@ -179,11 +171,11 @@ grow::start_grow(Mat input, Mat edgeMap, int sX, int sY, int colorflag)
 				s = intToString(x - 1, y);
 				queue.push_back(s);
 				//updateMean(seed, input.at<Vec3b>(x - 1, y), count);
-				modifyPixel(input, seed, x - 1, y, colorflag);
+				modifyPixel(input, x - 1, y, colorflag);
 				++count;
 			}
 			else
-				modifyPixel(edgeMap, seed, x - 1, y, colorflag);
+				modifyPixel(edgeMap, x - 1, y, colorflag);
 		}
 
 		//Above Pixel
@@ -196,11 +188,11 @@ grow::start_grow(Mat input, Mat edgeMap, int sX, int sY, int colorflag)
 				s = intToString(x, y - 1);
 				queue.push_back(s);
 				//updateMean(seed, input.at<Vec3b>(x, y - 1), count);
-				modifyPixel(input, seed, x, y - 1, colorflag);
+				modifyPixel(input, x, y - 1, colorflag);
 				++count;
 			}
 			else
-				modifyPixel(edgeMap, seed, x, y - 1, colorflag);
+				modifyPixel(edgeMap, x, y - 1, colorflag);
 		}
 
 		//Bottom Right Pixel
@@ -213,11 +205,11 @@ grow::start_grow(Mat input, Mat edgeMap, int sX, int sY, int colorflag)
 				s = intToString(x + 1, y + 1);
 				queue.push_back(s);
 				//updateMean(seed, input.at<Vec3b>(x + 1, y + 1), count);
-				modifyPixel(input, seed, x + 1, y + 1, colorflag);
+				modifyPixel(input, x + 1, y + 1, colorflag);
 				++count;
 			}
 			else
-				modifyPixel(edgeMap, seed, x + 1, y + 1, colorflag);
+				modifyPixel(edgeMap, x + 1, y + 1, colorflag);
 		}
 
 		//Upper Right Pixel
@@ -230,11 +222,11 @@ grow::start_grow(Mat input, Mat edgeMap, int sX, int sY, int colorflag)
 				s = intToString(x + 1, y - 1);
 				queue.push_back(s);
 				//updateMean(seed, input.at<Vec3b>(x + 1, y - 1), count);
-				modifyPixel(input, seed, x + 1, y - 1, colorflag);
+				modifyPixel(input, x + 1, y - 1, colorflag);
 				++count;
 			}
 			else
-				modifyPixel(edgeMap, seed, x + 1, y - 1, colorflag);
+				modifyPixel(edgeMap, x + 1, y - 1, colorflag);
 		}
 
 		//Bottom Left Pixel
@@ -247,11 +239,11 @@ grow::start_grow(Mat input, Mat edgeMap, int sX, int sY, int colorflag)
 				s = intToString(x - 1, y + 1);
 				queue.push_back(s);
 				//updateMean(seed, input.at<Vec3b>(x - 1, y + 1), count);
-				modifyPixel(input, seed, x - 1, y + 1, colorflag);
+				modifyPixel(input, x - 1, y + 1, colorflag);
 				++count;
 			}
 			else
-				modifyPixel(edgeMap, seed, x - 1, y + 1, colorflag);
+				modifyPixel(edgeMap, x - 1, y + 1, colorflag);
 		}
 
 		//Upper left Pixel
@@ -264,11 +256,11 @@ grow::start_grow(Mat input, Mat edgeMap, int sX, int sY, int colorflag)
 				s = intToString(x - 1, y - 1);
 				queue.push_back(s);
 				//updateMean(seed, input.at<Vec3b>(x - 1, y - 1), count);
-				modifyPixel(input, seed, x - 1, y - 1, colorflag);
+				modifyPixel(input, x - 1, y - 1, colorflag);
 				++count;
 			}
 			else
-				modifyPixel(edgeMap, seed, x - 1, y - 1, colorflag);
+				modifyPixel(edgeMap, x - 1, y - 1, colorflag);
 		}
 	}
 }
@@ -276,9 +268,4 @@ grow::start_grow(Mat input, Mat edgeMap, int sX, int sY, int colorflag)
 grow::setThreshold(int threshold)
 {
 	this->threshold = threshold;
-}
-
-grow::setSeed(Vec3b seed)
-{
-	this->seed = seed;
 }

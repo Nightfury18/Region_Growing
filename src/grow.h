@@ -11,10 +11,8 @@ class grow
 		grow(int threshold);
 		start_grow(Mat input, Mat edgeMap, int sX, int sY, int colorflag);
 		setThreshold(int threshold);
-		setSeed(Vec3b seed);
 		~grow();
 
 	private :
 		int threshold;
-		Vec3b seed;
 }
