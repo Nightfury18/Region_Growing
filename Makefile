@@ -150,6 +150,33 @@ src/CIEDE2000.cpp.s:
 	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/CIEDE2000.cpp.s
 .PHONY : src/CIEDE2000.cpp.s
 
+src/grow.o: src/grow.cpp.o
+
+.PHONY : src/grow.o
+
+# target to build an object file
+src/grow.cpp.o:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/grow.cpp.o
+.PHONY : src/grow.cpp.o
+
+src/grow.i: src/grow.cpp.i
+
+.PHONY : src/grow.i
+
+# target to preprocess a source file
+src/grow.cpp.i:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/grow.cpp.i
+.PHONY : src/grow.cpp.i
+
+src/grow.s: src/grow.cpp.s
+
+.PHONY : src/grow.s
+
+# target to generate assembly for a file
+src/grow.cpp.s:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/grow.cpp.s
+.PHONY : src/grow.cpp.s
+
 src/main.o: src/main.cpp.o
 
 .PHONY : src/main.o
@@ -189,6 +216,9 @@ help:
 	@echo "... src/CIEDE2000.o"
 	@echo "... src/CIEDE2000.i"
 	@echo "... src/CIEDE2000.s"
+	@echo "... src/grow.o"
+	@echo "... src/grow.i"
+	@echo "... src/grow.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
