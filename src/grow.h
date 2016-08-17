@@ -8,11 +8,12 @@ using namespace cv;
 class grow
 {
 	public :
-		grow(int threshold);
-		start_grow(Mat input, Mat edgeMap, int sX, int sY, int colorflag);
-		setThreshold(int threshold);
+		grow();
+		void start_grow(Mat input, Mat edgeMap, int sX, int sY, int colorflag);
+		void setThresholds(int colorThreshold, int whiteThreshold);
 		~grow();
 
 	private :
-		int threshold;
+		int colorThreshold;
+		int whiteThreshold;
 }
