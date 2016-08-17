@@ -4,7 +4,8 @@
 #include <string>
 #include <sstream>
 #include <list>
-#include "Color.cpp"
+#include "Color.hpp"
+#include "grow.h"
 
 using namespace std;
 using namespace cv;
@@ -95,12 +96,13 @@ grow::grow()
 
 /*
 	Region Growing algorithm, which is flood type algorithm
-	edgeMap -> output images with only edges of final blobs
+	filled -> output image with filled buoys
+	edgeMap -> output image with only edges of final blobs
 	sX --> Seed Pixel x value
 	sY --> Seed Pixel y value
 	colorflag --> to determine the color to be filled with
 */
-grow::start_grow(Mat input, Mat edgeMap, int sX, int sY, int colorflag)
+void grow::start_grow(Mat input, Mat filled, Mat edgeMap, int sX, int sY, int colorflag)
 {
 	int x, y;
 	long int count = 1;
@@ -112,7 +114,7 @@ grow::start_grow(Mat input, Mat edgeMap, int sX, int sY, int colorflag)
 
 	reach[sX][sY] = true;
 
-	modifyPixel(input, sX, sY, colorflag);
+	modifyPixel(filled, sX, sY, colorflag);
 
 	s = intToString(sX, sY);
 	queue.push_back(s);
@@ -138,7 +140,7 @@ grow::start_grow(Mat input, Mat edgeMap, int sX, int sY, int colorflag)
 				s = intToString(x + 1, y);
 				queue.push_back(s);
 				//updateMean(seed, input.at<Vec3b>(x + 1, y), count);
-				modifyPixel(input, x + 1, y, colorflag);
+				modifyPixel(filled, x + 1, y, colorflag);
 				++count;
 			}
 			else
@@ -156,7 +158,7 @@ grow::start_grow(Mat input, Mat edgeMap, int sX, int sY, int colorflag)
 				s = intToString(x, y + 1);
 				queue.push_back(s);
 				//updateMean(seed, input.at<Vec3b>(x, y + 1), count);
-				modifyPixel(input, x, y + 1, colorflag);
+				modifyPixel(filled, x, y + 1, colorflag);
 				++count;
 			}
 			else
@@ -176,7 +178,7 @@ grow::start_grow(Mat input, Mat edgeMap, int sX, int sY, int colorflag)
 				s = intToString(x - 1, y);
 				queue.push_back(s);
 				//updateMean(seed, input.at<Vec3b>(x - 1, y), count);
-				modifyPixel(input, x - 1, y, colorflag);
+				modifyPixel(filled, x - 1, y, colorflag);
 				++count;
 			}
 			else
@@ -193,7 +195,7 @@ grow::start_grow(Mat input, Mat edgeMap, int sX, int sY, int colorflag)
 				s = intToString(x, y - 1);
 				queue.push_back(s);
 				//updateMean(seed, input.at<Vec3b>(x, y - 1), count);
-				modifyPixel(input, x, y - 1, colorflag);
+				modifyPixel(filled, x, y - 1, colorflag);
 				++count;
 			}
 			else
@@ -210,7 +212,7 @@ grow::start_grow(Mat input, Mat edgeMap, int sX, int sY, int colorflag)
 				s = intToString(x + 1, y + 1);
 				queue.push_back(s);
 				//updateMean(seed, input.at<Vec3b>(x + 1, y + 1), count);
-				modifyPixel(input, x + 1, y + 1, colorflag);
+				modifyPixel(filled, x + 1, y + 1, colorflag);
 				++count;
 			}
 			else
@@ -227,7 +229,7 @@ grow::start_grow(Mat input, Mat edgeMap, int sX, int sY, int colorflag)
 				s = intToString(x + 1, y - 1);
 				queue.push_back(s);
 				//updateMean(seed, input.at<Vec3b>(x + 1, y - 1), count);
-				modifyPixel(input, x + 1, y - 1, colorflag);
+				modifyPixel(filled, x + 1, y - 1, colorflag);
 				++count;
 			}
 			else
@@ -244,7 +246,7 @@ grow::start_grow(Mat input, Mat edgeMap, int sX, int sY, int colorflag)
 				s = intToString(x - 1, y + 1);
 				queue.push_back(s);
 				//updateMean(seed, input.at<Vec3b>(x - 1, y + 1), count);
-				modifyPixel(input, x - 1, y + 1, colorflag);
+				modifyPixel(filled, x - 1, y + 1, colorflag);
 				++count;
 			}
 			else
@@ -261,7 +263,7 @@ grow::start_grow(Mat input, Mat edgeMap, int sX, int sY, int colorflag)
 				s = intToString(x - 1, y - 1);
 				queue.push_back(s);
 				//updateMean(seed, input.at<Vec3b>(x - 1, y - 1), count);
-				modifyPixel(input, x - 1, y - 1, colorflag);
+				modifyPixel(filled, x - 1, y - 1, colorflag);
 				++count;
 			}
 			else
@@ -269,9 +271,18 @@ grow::start_grow(Mat input, Mat edgeMap, int sX, int sY, int colorflag)
 		}
 	}
 }
-
-grow::setThreshold(int colorThreshold, int whiteThreshold)
+/*
+	Funtion to set both the thresholds	
+*/
+void grow::setThresholds(int colorThreshold, int whiteThreshold)
 {
 	this->colorThreshold = colorThreshold;
 	this->whiteThreshold = whiteThreshold;
+}
+/*
+	Destructor
+*/
+grow::~grow()
+{
+
 }
