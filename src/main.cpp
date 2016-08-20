@@ -33,12 +33,12 @@ int main(int argc, char const **argv)
 	auto t1 = clk::now();
 
 	//seed = denoise.at<Vec3b>(290, 290);
-	M.start_grow(denoise, filled, edgeMap, 256, 130, 1);
+	M.start_grow(denoise, filled, edgeMap, 256, 130, 2);
 
 	auto t2 = clk::now();
 
 	//seed = denoise.at<Vec3b>(256, 294);
-	M.start_grow(denoise, filled, edgeMap, 263, 276, 3);
+	M.start_grow(denoise, filled, edgeMap, 263, 276, 4);
 
 	auto t3 = clk::now();
 

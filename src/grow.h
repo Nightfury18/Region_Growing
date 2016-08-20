@@ -7,16 +7,16 @@
 
 using namespace std;
 using namespace cv;
+
 class grow
 {
-	public :
-		grow();
-		void start_grow(Mat input, Mat filled, Mat edgeMap, int sX, int sY, int colorflag);
-		void setThresholds(int colorThreshold, int whiteThreshold);
-		~grow();
+	public:
+    	grow(int colorThreshold = 20, int whiteThreshold = 10);
+    	void start_grow(Mat input, Mat filled, Mat edgeMap, const int sX, const int sY, const int colorflag);
+    	void setThresholds(const int colorThreshold, const int whiteThreshold);
 
-	private :
-		int colorThreshold;
-		int whiteThreshold;
+	private:
+    	int colorThreshold;
+    	int whiteThreshold;
 };
 #endif
